@@ -108,17 +108,21 @@ async function loadTextFile(fileName) {
 }
 
 function parseListFile(content) {
-  return content
-    .split(/\r?\n/)
-    .map(line => line.split("\t"))
-    .filter(parts => parts.length >= 5)
-    .map(parts => ({
-      type: parts[0].trim(),
-      proposition: parts[1].trim(),
-      longueur: parts[2].trim(),
-      region: parts[3].trim(),
-      proposition_detaillee: parts[4].trim(),
-    }));
+  const lines = content.split(/\r?\n/).filter(line => line.trim());
+  const parsed = lines.map(line => {
+    let parts;
+    if (line.includes("\t")) parts = line.split("\t");
+    else if (line.includes(";")) parts = line.split(";");
+    else parts = line.split(/\s{2,}/);
+    return parts.map(p => p.trim());
+  }).filter(parts => parts.length >= 5);
+  return parsed.map(parts => ({
+    type: parts[0],
+    proposition: parts[1],
+    longueur: parts[2],
+    region: parts[3],
+    proposition_detaillee: parts[4],
+  }));
 }
 
 function parseConqueteMotif(content) {
