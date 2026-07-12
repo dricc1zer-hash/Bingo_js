@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bingo</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles_conquete_patch.css">
+
+  <style>
+    .seed-dialog {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      padding: 0;
+      max-width: 500px;
+      width: 90%;
+    }
+    
+    .seed-dialog::backdrop {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .seed-dialog-content {
+      padding: 24px;
+    }
+    
+    .seed-dialog-content h3 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    
+    .seed-display {
+      background-color: #f5f5f5;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 14px;
+      word-break: break-all;
+      margin-bottom: 16px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    
+    .seed-dialog-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+    
+    .seed-buttons {
+      margin-bottom: 16px;
+    }
+    
+    #seed-input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: monospace;
+      box-sizing: border-box;
+    }
+    
+    #seed-input:focus {
+      outline: none;
+      border-color: #3498db;
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+    <section id="main-screen" class="screen screen-active menu-screen" aria-labelledby="app-title">
+      <div class="brand-block">
+        <h1 id="app-title">Bingo</h1>
+        <img class="title-image" src="Bingo.png" alt="Grille de Bingo">
+      </div>
+      <nav class="menu-actions" aria-label="Menu principal">
+        <button class="primary-action" data-screen="bingo-screen">Bingo</button>
+        <button data-screen="conquete-screen">Conquête</button>
+        <button data-screen="settings-screen">Paramètres</button>
+        <button data-screen="credits-screen">Crédits</button>
+
+      </nav>
+    </section>
+    <section id="bingo-screen" class="screen game-screen" aria-labelledby="bingo-title">
+
+
+      <header class="game-header">
+        <div class="bingo-title-row" style="display:flex;align-items:center;gap:4px;">
+          <h2 id="bingo-title" style="margin:0;">Bingo</h2>
+          <button id="help-bingo" class="help-button" type="button" aria-label="Aide Bingo" style="margin:0;padding:0 6px;">?</button>
+        </div>
+        <output id="timer" class="timer">Chronomètre : 00:00:00</output>
+
+      </header>
+      <div class="toolbar" aria-label="Contrôles de partie">
+        <button id="fill-grid">Commencer</button><button id="start-timer">Démarrer chrono</button><button id="stop-timer">Arrêter chrono</button>
+        <div class="player-colors" aria-label="Couleur du joueur actif">
+          <button class="color-button" data-color="green" aria-label="Joueur Vert"></button><button class="color-button" data-color="red" aria-label="Joueur Rouge"></button><button class="color-button" data-color="blue" aria-label="Joueur Bleu"></button><button class="color-button" data-color="yellow" aria-label="Joueur Jaune"></button>
+        </div>
+      </div>
+      <div id="bingo-grid" class="bingo-grid" aria-label="Grille de bingo"></div>
+      <div class="seed-controls">
+        <button id="import-seed">Importer Graine</button>
+        <button id="export-seed">Exporter Graine</button>
+      </div>
+      <button class="back-button" data-screen="main-screen">Menu principal</button>
+    </section>
+    <section id="settings-screen" class="screen settings-screen" aria-labelledby="settings-title">
+
+
+      <h2 id="settings-title">Paramètres</h2>
+      <form class="settings-form">
+        <label><span>Difficulté</span><select id="difficulty"><option>Normal</option><option>Facile</option></select></label>
+        <label><span>Longueur Min</span><select id="length-min"><option>1</option><option>2</option></select></label>
+        <label><span>Longueur Max</span><select id="length-max"><option>3</option><option>4</option><option selected>5</option></select></label>
+        <label><span>Temps limite en Min</span><input id="time-limit" type="number" min="1" step="1" value="30" inputmode="numeric"></label>
+        <label><span>Points pour ligne/Col/diag</span><input id="line-points" type="number" min="0" step="1" value="3" inputmode="numeric"></label>
+        <label><span>Fichier</span><select id="file-select"><option selected>Genshin-FR</option><option>Genshin-EN</option></select></label>
+
+        <label><span>Afficher Longueur</span><select id="show-length"><option selected>Non</option><option>Oui</option></select></label>
+        <button id="reset-settings" type="button">Par défaut</button>
+      </form>
+      <p class="settings-note">La difficulté Facile ajoute la région. La longueur filtre les propositions disponibles. Le bonus s'ajoute pour chaque ligne, colonne ou diagonale complète d'une même couleur.</p>
+      <button class="back-button" data-screen="main-screen">Menu principal</button>
+    </section>
+    <section id="conquete-screen" class="screen game-screen" aria-labelledby="conquete-title">
+      <header class="game-header"><h2 id="conquete-title">Bingo Conquête</h2><output id="timer-conquete" class="timer">Chronomètre : 00:00:00</output></header>
+
+      <div class="toolbar" aria-label="Contrôles de partie">
+        <button id="fill-grid-conquete">Commencer</button>
+        <button id="start-timer">Démarrer chrono</button>
+        <button id="stop-timer">Arrêter chrono</button>
+        <div class="player-colors" aria-label="Couleur du joueur actif">
+          <button class="color-button" data-color="green" aria-label="Joueur Vert"></button>
+          <button class="color-button" data-color="red" aria-label="Joueur Rouge"></button>
+          <button class="color-button" data-color="blue" aria-label="Joueur Bleu"></button>
+          <button class="color-button" data-color="yellow" aria-label="Joueur Jaune"></button>
+        </div>
+      </div>
+      <div id="conquete-grid" class="conquete-grid" aria-label="Grille de Conquête"></div>
+      <button class="back-button" data-screen="main-screen">Menu principal</button>
+    </section>
+
+    <section id="credits-screen" class="screen credits-screen" aria-labelledby="credits-title">
+      <h2 id="credits-title">Crédits</h2><article id="credits-content" class="credits-content"></article><button class="back-button" data-screen="main-screen">Menu principal</button>
+    </section>
+
+  </main>
+  <dialog id="message-dialog"><form method="dialog" class="dialog-card"><h3 id="dialog-title"></h3><div id="dialog-message"></div><button>OK</button></form></dialog>
+  <dialog id="help-bingo-dialog" class="seed-dialog" style="max-width:650px;">
+    <div class="seed-dialog-content">
+      <h3 id="help-bingo-title">Aide Bingo</h3>
+      <div id="help-bingo-content" style="white-space:pre-wrap;line-height:1.3;">Chargement...</div>
+      <div class="seed-dialog-actions">
+        <button id="help-bingo-close" value="cancel" class="primary-action">Fermer</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="seed-dialog" class="seed-dialog">
+    <div class="seed-dialog-content">
+      <h3 id="seed-dialog-title">Graine</h3>
+      <div id="export-section" style="display: none;">
+        <p>Votre graine :</p>
+        <div id="seed-display" class="seed-display"></div>
+        <div class="seed-dialog-actions">
+          <button id="copy-seed">Copier</button>
+          <button id="close-seed">Fermer</button>
+        </div>
+      </div>
+      <div id="import-section" style="display: none;">
+        <p>Entrez votre graine (50 caractères) :</p>
+        <input type="text" id="seed-input" maxlength="50" placeholder="Collez votre graine ici...">
+        <div class="seed-buttons">
+          <button id="paste-seed">Coller</button>
+        </div>
+        <div class="seed-dialog-actions">
+          <button id="cancel-seed">Retour</button>
+          <button id="confirm-seed" class="primary-action">Confirmer</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+  <script src="app.js"></script>
+</body>
+</html>
