@@ -1,0 +1,2 @@
+Genshin-FR;Liste_FR.txt
+Genshin-EN;Liste_EN.txt
