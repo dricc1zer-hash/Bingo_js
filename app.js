@@ -1,4 +1,4 @@
-﻿const GRID_SIZE = 5;
+const GRID_SIZE = 5;
 const CELLS_COUNT = GRID_SIZE * GRID_SIZE;
 const GRID_SIZE_CONQ = 7;
 const PLAYER_COLORS = { green: "#2ecc71", red: "#e74c3c", blue: "#3498db", yellow: "#f1c40f" };
@@ -41,13 +41,13 @@ const els = {
   helpBingoDialogContent: document.querySelector("#help-bingo-content"),
   helpBingoDialogClose: document.querySelector("#help-bingo-close"),
 
-  // timer output (ConquÃªte)
+  // timer output (Conquête)
   timerConq: document.querySelector("#timer-conquete"),
 
 
   fillGrid: document.querySelector("#fill-grid"),
 
-  // ConquÃªte
+  // Conquête
   conqGrid: document.querySelector("#conquete-grid"),
   fillConq: document.querySelector("#fill-grid-conquete"),
 
@@ -63,7 +63,6 @@ const els = {
   showLength: document.querySelector("#show-length"),
   resetSettings: document.querySelector("#reset-settings"),
   fileSelect: document.querySelector("#file-select"),
-  fileDescription: document.querySelector("#file-description"),
 
   // Seed modal (Bingo only)
   colorButtons: [...document.querySelectorAll(".color-button")],
@@ -114,8 +113,7 @@ function parseListFile(content) {
     let parts;
     if (line.includes("\t")) parts = line.split("\t");
     else if (line.includes("|")) parts = line.split("|");
-    else if (line.includes(";")) parts = line.split(";");
-    else parts = line.split("\t");
+    else parts = line.split(";");
     return parts.map(p => p.trim());
   }).filter(parts => parts.length >= 5);
   return parsed.map(parts => ({
@@ -140,7 +138,7 @@ function parseConqueteMotif(content) {
       .map(ch => (ch === "1" ? 1 : 0))
   );
   if (grid.length !== GRID_SIZE_CONQ || grid.some(r => r.length !== GRID_SIZE_CONQ)) {
-    throw new Error("Motif conquÃªte invalide : attendu 7x7 de 0/1");
+    throw new Error("Motif conquête invalide : attendu 7x7 de 0/1");
   }
   return grid;
 }
@@ -165,7 +163,7 @@ function validateTimeLimit({ silent = false } = {}) {
   const minutes = Number.parseInt(value, 10);
   if (!value || !Number.isInteger(minutes) || minutes <= 0) {
     els.timeLimit.value = "30";
-    if (!silent) showMessage("ParamÃ¨tres", "Le temps limite doit Ãªtre un nombre entier supÃ©rieur Ã  0.");
+    if (!silent) showMessage("Paramètres", "Le temps limite doit être un nombre entier supérieur à 0.");
     return false;
   }
   return true;
@@ -191,7 +189,7 @@ function clearTimerInterval() {
 function updateTimerDisplay() {
   const t = state.mode === "conquete" ? els.timerConq : els.timer;
   if (!t) return;
-  t.textContent = "ChronomÃ¨tre : " + formatTime(elapsedSeconds());
+  t.textContent = "Chronomètre : " + formatTime(elapsedSeconds());
 }
 
 
@@ -217,7 +215,7 @@ function startTimer() {
 
 function stopTimer() {
   if (!state.timerRunning) {
-    showMessage("ChronomÃ¨tre", "Le chronomÃ¨tre n'est pas dÃ©marrÃ©.");
+    showMessage("Chronomètre", "Le chronomètre n'est pas démarré.");
     return;
   }
   finalizeTimer();
@@ -260,12 +258,12 @@ function showBingoResultPopup() {
   const winners = results.filter(r => r.total === maxScore);
   const winnerText = winners.length === 1
     ? `Gagnant : ${winners[0].label} !`
-    : `Ã‰galitÃ© entre : ${winners.map(w => w.label).join(" et ")} !`;
+    : `Égalité entre : ${winners.map(w => w.label).join(" et ")} !`;
 
   const lines = results.map(({ label, cells, completeLines, bonus }) => {
     return "Joueur " + label + " : " + (cells + bonus) +
       " points\n  (" + cells + " cases + " + completeLines +
-      " ligne(s)/col/diag Ã— " + bonusPerLine + ")";
+      " ligne(s)/col/diag × " + bonusPerLine + ")";
   });
 
   showMessage(winnerText, "Temps : " + formatTime(state.timerElapsed) + "\n\n" + lines.join("\n\n"));
@@ -276,7 +274,7 @@ function validateLinePoints({ silent = false } = {}) {
   const points = Number.parseInt(value, 10);
   if (!value || !Number.isInteger(points)) {
     els.linePoints.value = "3";
-    if (!silent) showMessage("ParamÃ¨tres", "Le nombre de points doit Ãªtre un nombre entier.");
+    if (!silent) showMessage("Paramètres", "Le nombre de points doit être un nombre entier.");
     return false;
   }
   return true;
@@ -354,9 +352,9 @@ function fillGrid() {
   if (entries.length < CELLS_COUNT) {
     showMessage(
       "Erreur",
-      "Pas assez de propositions pour les critÃ¨res choisis (longueur " +
+      "Pas assez de propositions pour les critères choisis (longueur " +
         els.lengthMin.value +
-        " Ã  " +
+        " à " +
         els.lengthMax.value +
         ").\nIl en faut au moins " +
         CELLS_COUNT +
@@ -401,7 +399,7 @@ function drawBingoCell(row, col) {
     const safeCount = Number.isInteger(len) ? Math.max(0, len) : 0;
     starsEl.style.display = "block";
     starsEl.innerHTML = Array.from({ length: safeCount })
-      .map(() => '<span class="star-text" aria-hidden="true">â˜…</span>')
+      .map(() => '<span class="star-text" aria-hidden="true">★</span>')
       .join("");
   } else {
     starsEl.style.display = "none";
@@ -478,7 +476,7 @@ function shuffle(items) {
 
 function toggleBingoCell(row, col) {
   if (!state.timerRunning) {
-    showMessage("ChronomÃ¨tre", "Le chronomÃ¨tre doit Ãªtre dÃ©marrÃ©");
+    showMessage("Chronomètre", "Le chronomètre doit être démarré");
     return;
   }
   if (!state.gridTexts[row][col]) return;
@@ -508,7 +506,7 @@ function updateColorButtons() {
   });
 }
 
-// -------------------- ConquÃªte --------------------
+// -------------------- Conquête --------------------
 
 const CONQ_START_POINTS = [
   [0, 0],
@@ -530,9 +528,9 @@ function makeConqEmptyGrid() {
   stateConq.owner = makeMatrix(GRID_SIZE_CONQ, null);
 }
 
-// Grille ConquÃªte 7x7 intÃ©grÃ©e (remplace conquete.txt)
+// Grille Conquête 7x7 intégrée (remplace conquete.txt)
 function buildConqueteFromCode() {
-  // 1 = case jouable, 0 = case non utilisÃ©e (invisible)
+  // 1 = case jouable, 0 = case non utilisée (invisible)
   stateConq.motif = [
     [1,1,1,1,0,0,1],
     [0,1,1,1,1,1,1],
@@ -559,7 +557,7 @@ function cellConqElement(row, col) {
 }
 
 function conqCellBackground(ownerSet) {
-  // For ConquÃªte, each cell has exactly one owner or null.
+  // For Conquête, each cell has exactly one owner or null.
   if (!ownerSet) return "white";
   return PLAYER_COLORS[ownerSet];
 }
@@ -586,7 +584,7 @@ function drawConqueteCell(row, col) {
   cell.classList.toggle("empty", !owner);
   cell.classList.toggle("filled", Boolean(owner));
 
-  // Texte (rendu ConquÃªte)
+  // Texte (rendu Conquête)
   const text = (stateConq.texts && stateConq.texts[row] && stateConq.texts[row][col]) ? stateConq.texts[row][col] : "";
   cell.querySelector(".cell-text").textContent = text || "";
 
@@ -595,7 +593,7 @@ function drawConqueteCell(row, col) {
   const isCorner = isCornerStart(row, col);
   cell.classList.toggle("conq-start-frame", isCorner);
 
-  // Couleur du cadre (obligation de dÃ©marrer sur ces cases)
+  // Couleur du cadre (obligation de démarrer sur ces cases)
   if (isCorner) {
     const cornerColor = cornerOwnerColor(row, col);
     cell.dataset.conqCorner = cornerColor;
@@ -620,7 +618,7 @@ function buildEmptyConqueteGrid() {
       cell.className = "cell conq-cell";
       cell.dataset.row = String(row);
       cell.dataset.col = String(col);
-      cell.setAttribute("aria-label", "Case conquÃªte");
+      cell.setAttribute("aria-label", "Case conquête");
 
       const textEl = document.createElement("div");
       textEl.className = "cell-text";
@@ -690,7 +688,7 @@ function toggleConqCell(row, col) {
 }
 
 async function conqAutoStartFillBingoLike() {
-  // RÃ¨gle demandÃ©e:
+  // Règle demandée:
   // - "Commencer" met le TEXTE des propositions dans les cellules.
   // - "Commencer" ne DOIT PAS colorer (pas d'owner) : l'utilisateur clique ensuite.
 
@@ -709,10 +707,10 @@ async function conqAutoStartFillBingoLike() {
     }
   }
 
-  // RÃ¨gles d'Ã©galitÃ© de proposition demandÃ©es :
+  // Règles d'égalité de proposition demandées :
   // - A1=A7=G1=G7
   // - A2=B7=F1=G6
-  // (coordonnÃ©es en index 0-based: A*=col0, B*=col1, ...)
+  // (coordonnées en index 0-based: A*=col0, B*=col1, ...)
   const eqGroup1 = [
     [0, 0],
     [0, GRID_SIZE_CONQ - 1],
@@ -728,8 +726,8 @@ async function conqAutoStartFillBingoLike() {
   ];
 
 
-  // Tirages de propositions depuis la liste (alÃ©atoire selon Langue)
-  // On ne filtre pas par longueur car ConquÃªte n'avait pas de critÃ¨res dans l'UI.
+  // Tirages de propositions depuis la liste (aléatoire selon Langue)
+  // On ne filtre pas par longueur car Conquête n'avait pas de critères dans l'UI.
   const selectedForTexts = shuffle(entries).map(e => e[column]);
   let textIdx = 0;
 
@@ -741,9 +739,9 @@ async function conqAutoStartFillBingoLike() {
     return selectedForTexts[textIdx++];
   }
 
-  // Assignation texte: on Ã©crit directement dans le DOM via drawConqueteCell
+  // Assignation texte: on écrit directement dans le DOM via drawConqueteCell
   // => on stocke temporairement dans stateConq.owner? non. On doit avoir un champ texte.
-  // On utilise un tableau dÃ©diÃ©.
+  // On utilise un tableau dédié.
   if (!stateConq.texts) stateConq.texts = makeMatrix(GRID_SIZE_CONQ, "");
 
   // clear texts
@@ -761,7 +759,7 @@ async function conqAutoStartFillBingoLike() {
     if (stateConq.isPlayable[r][c]) stateConq.texts[r][c] = text2;
   }
 
-  // autres cellules jouables: texte alÃ©atoire
+  // autres cellules jouables: texte aléatoire
   for (const [r, c] of playableCells) {
     if (stateConq.texts[r][c]) continue;
     stateConq.texts[r][c] = nextText();
@@ -844,7 +842,7 @@ function showConqueteResultPopup() {
   const winners = results.filter(r => r.total === maxScore);
   const winnerText = winners.length === 1
     ? `Gagnant : ${winners[0].label} !`
-    : `Ã‰galitÃ© entre : ${winners.map(w => w.label).join(" et ")} !`;
+    : `Égalité entre : ${winners.map(w => w.label).join(" et ")} !`;
 
   const lines = results.map(r => `Joueur ${r.label} : ${r.total} cases`);
   showMessage(winnerText, "Temps : " + formatTime(state.timerElapsed) + "\n\n" + lines.join("\n\n"));
@@ -854,7 +852,7 @@ function showConqueteResultPopup() {
 
 function showScreen(screenId) {
   validateTimeLimit({ silent: true });
-  // Only validate bingo settings; conquÃªte uses only timeLimit.
+  // Only validate bingo settings; conquête uses only timeLimit.
 
   els.screens.forEach(screen => screen.classList.toggle("screen-active", screen.id === screenId));
 
@@ -863,7 +861,7 @@ function showScreen(screenId) {
   if (screenId === "route-screen" && typeof resetRouteScreen === "function") resetRouteScreen();
 }
 
-// Mapping des fichiers de donnÃ©es
+// Mapping des fichiers de données
 let fileMapping = {};
 
 async function loadFileMapping() {
@@ -872,10 +870,7 @@ async function loadFileMapping() {
     fileMapping = {};
     const lines = content.split(/\r?\n/).filter(line => line.trim() && !line.startsWith("#"));
     for (const line of lines) {
-      const parts = line.split(";").map(s => s.trim());
-      const displayName = parts[0];
-      const fileName = parts[1];
-      const description = parts[2] || "";
+      const [displayName, fileName, description] = line.split(";").map(s => s.trim());
       if (displayName && fileName) {
         fileMapping[displayName] = { fileName, description };
       }
@@ -884,8 +879,8 @@ async function loadFileMapping() {
     console.error("Erreur lors du chargement de Fichiers.txt:", error);
     // Fallback vers l'ancien comportement
     fileMapping = {
-      "Genshin-FR": "Liste_FR.txt",
-      "Genshin-EN": "Liste_EN.txt"
+      "Genshin-FR": { fileName: "Liste_FR.txt", description: "" },
+      "Genshin-EN": { fileName: "Liste_EN.txt", description: "" }
     };
   }
 }
@@ -893,16 +888,7 @@ async function loadFileMapping() {
 function getCurrentFileName() {
   const selectedDisplay = els.fileSelect.value;
   const info = fileMapping[selectedDisplay];
-  return info ? (info.fileName || "Liste_FR.txt") : "Liste_FR.txt";
-}
-
-function updateFileDescription() {
-  const selectedDisplay = els.fileSelect.value;
-  const info = fileMapping[selectedDisplay];
-  if (els.fileDescription) {
-    els.fileDescription.textContent = info ? (info.description || "") : "";
-    els.fileDescription.style.display = info && info.description ? "block" : "none";
-  }
+  return (info && info.fileName) || "Liste_FR.txt";
 }
 
 async function bootstrap() {
@@ -929,7 +915,7 @@ async function bootstrap() {
 
     els.helpBingoDialogClose.addEventListener("click", () => {
       try {
-        els.helpBingoDialogClose.close();
+        els.helpBingoDialog.close();
       } catch (_) {}
     });
   }
@@ -937,50 +923,26 @@ async function bootstrap() {
   // Charger le mapping des fichiers
   await loadFileMapping();
 
-  // Peupler le select avec les options du Fichiers.txt
-  if (els.fileSelect) {
-    const currentValue = els.fileSelect.value;
-    els.fileSelect.innerHTML = "";
-    const displayNames = Object.keys(fileMapping);
-    if (displayNames.length === 0) {
-      // Fallback si mapping vide
-      els.fileSelect.innerHTML = '<option selected>Genshin-FR</option><option>Genshin-EN</option>';
-    } else {
-      displayNames.forEach(name => {
-        const opt = document.createElement("option");
-        opt.value = name;
-        opt.textContent = name;
-        if (name === currentValue) opt.selected = true;
-        els.fileSelect.appendChild(opt);
-      });
-      if (!displayNames.includes(currentValue)) {
-        els.fileSelect.value = displayNames[0];
-      }
-    }
-  }
-
-  // Afficher la description du fichier sÃ©lectionnÃ©
-  updateFileDescription();
-
   try {
     const listFileName = getCurrentFileName();
     const data = await Promise.all([
       loadTextFile(listFileName),
-      loadTextFile("CrÃ©dits.txt").catch(() => ""),
+      loadTextFile("Crédits.txt").catch(() => ""),
     ]);
     state.entries = parseListFile(data[0]);
     els.credits.textContent = data[1];
     state.language = els.fileSelect.value;
   } catch (error) {
-    showMessage("Erreur", "Impossible de charger les donnÃ©es du jeu.\n" + error.message);
+    showMessage("Erreur", "Impossible de charger les données du jeu.\n" + error.message);
   }
 
-  // Build ConquÃªte grid motif in code (no file dependency)
+  // Build Conquête grid motif in code (no file dependency)
   try {
     buildConqueteFromCode();
   } catch (e) {
     console.error(e);
   }
+
 
   buildEmptyGrid();
   updateColorButtons();
@@ -1027,7 +989,7 @@ function encodeSeed() {
 
 function decodeSeed(seed) {
   if (seed.length !== 50) {
-    showMessage("Erreur", "La graine doit contenir exactement 50 caractÃ¨res.");
+    showMessage("Erreur", "La graine doit contenir exactement 50 caractères.");
     return false;
   }
   state.gridColors = makeMatrix(GRID_SIZE, null).map(row => row.map(() => new Set()));
@@ -1045,7 +1007,7 @@ function decodeSeed(seed) {
       const idx1 = SEED_ALPHABET.indexOf(char1);
       const idx2 = SEED_ALPHABET.indexOf(char2);
       if (idx1 === -1 || idx2 === -1) {
-        showMessage("Erreur", "CaractÃ¨re invalide dans la graine : " + (idx1 === -1 ? char1 : char2));
+        showMessage("Erreur", "Caractère invalide dans la graine : " + (idx1 === -1 ? char1 : char2));
         return false;
       }
       const index = idx2 * 64 + idx1;
@@ -1093,7 +1055,7 @@ function copySeed() {
   const seed = els.seedDisplay.textContent;
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(seed).then(() => {
-      showMessage("SuccÃ¨s", "Graine copiÃ©e dans le presse-papier !");
+      showMessage("Succès", "Graine copiée dans le presse-papier !");
     }).catch(() => {
       fallbackCopySeed(seed);
     });
@@ -1105,7 +1067,7 @@ function copySeed() {
 function fallbackCopySeed(seed) {
   els.seedDisplay.select();
   document.execCommand("copy");
-  showMessage("SuccÃ¨s", "Graine copiÃ©e !");
+  showMessage("Succès", "Graine copiée !");
 }
 
 function pasteSeed() {
@@ -1149,20 +1111,19 @@ function initEventListeners() {
       els.linePoints.value = "3";
       els.showLength.value = "Non";
       if (els.fileSelect) els.fileSelect.value = "Genshin-FR";
-      showMessage("ParamÃ¨tres", "ParamÃ¨tres rÃ©initialisÃ©s aux valeurs par dÃ©faut.");
+      showMessage("Paramètres", "Paramètres réinitialisés aux valeurs par défaut.");
     });
   }
 
   // Changement de fichier
   if (els.fileSelect) {
     els.fileSelect.addEventListener("change", async () => {
-      updateFileDescription();
       try {
         const listFileName = getCurrentFileName();
-        const content = await loadTextFile(listFileName);
-        state.entries = parseListFile(content);
+        const data = await loadTextFile(listFileName);
+        state.entries = parseListFile(data);
         state.language = els.fileSelect.value;
-        showMessage("SuccÃ¨s", "Fichier chargÃ© : " + listFileName + "\nNombre de propositions : " + state.entries.length);
+        showMessage("Succès", "Fichier chargé : " + listFileName);
       } catch (error) {
         showMessage("Erreur", "Impossible de charger le fichier.\n" + error.message);
       }
@@ -1176,22 +1137,7 @@ function initEventListeners() {
   if (els.cancelSeedBtn) els.cancelSeedBtn.addEventListener("click", () => els.seedDialog.close());
   if (els.copySeedBtn) els.copySeedBtn.addEventListener("click", copySeed);
   if (els.pasteSeedBtn) els.pasteSeedBtn.addEventListener("click", pasteSeed);
-
-  // Close button for seed dialog
-  if (document.getElementById("close-seed")) {
-    document.getElementById("close-seed").addEventListener("click", () => {
-      if (els.seedDialog) els.seedDialog.close();
-    });
-  }
-
-  // Color buttons click handler
-  els.colorButtons.forEach(button => {
-    button.addEventListener("click", () => {
-      state.activeColor = button.dataset.color;
-      updateColorButtons();
-    });
-  });
-
+  if (document.getElementById("close-seed")) document.getElementById("close-seed").addEventListener("click", () => els.seedDialog.close());
 }
 
 // -------------------- Initialisation --------------------
