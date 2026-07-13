@@ -1,4 +1,4 @@
-const GRID_SIZE = 5;
+﻿const GRID_SIZE = 5;
 const CELLS_COUNT = GRID_SIZE * GRID_SIZE;
 const GRID_SIZE_CONQ = 7;
 const PLAYER_COLORS = { green: "#2ecc71", red: "#e74c3c", blue: "#3498db", yellow: "#f1c40f" };
@@ -41,13 +41,13 @@ const els = {
   helpBingoDialogContent: document.querySelector("#help-bingo-content"),
   helpBingoDialogClose: document.querySelector("#help-bingo-close"),
 
-  // timer output (Conquête)
+  // timer output (ConquÃªte)
   timerConq: document.querySelector("#timer-conquete"),
 
 
   fillGrid: document.querySelector("#fill-grid"),
 
-  // Conquête
+  // ConquÃªte
   conqGrid: document.querySelector("#conquete-grid"),
   fillConq: document.querySelector("#fill-grid-conquete"),
 
@@ -140,7 +140,7 @@ function parseConqueteMotif(content) {
       .map(ch => (ch === "1" ? 1 : 0))
   );
   if (grid.length !== GRID_SIZE_CONQ || grid.some(r => r.length !== GRID_SIZE_CONQ)) {
-    throw new Error("Motif conquête invalide : attendu 7x7 de 0/1");
+    throw new Error("Motif conquÃªte invalide : attendu 7x7 de 0/1");
   }
   return grid;
 }
@@ -165,7 +165,7 @@ function validateTimeLimit({ silent = false } = {}) {
   const minutes = Number.parseInt(value, 10);
   if (!value || !Number.isInteger(minutes) || minutes <= 0) {
     els.timeLimit.value = "30";
-    if (!silent) showMessage("Paramètres", "Le temps limite doit être un nombre entier supérieur à 0.");
+    if (!silent) showMessage("ParamÃ¨tres", "Le temps limite doit Ãªtre un nombre entier supÃ©rieur Ã  0.");
     return false;
   }
   return true;
@@ -191,7 +191,7 @@ function clearTimerInterval() {
 function updateTimerDisplay() {
   const t = state.mode === "conquete" ? els.timerConq : els.timer;
   if (!t) return;
-  t.textContent = "Chronomètre : " + formatTime(elapsedSeconds());
+  t.textContent = "ChronomÃ¨tre : " + formatTime(elapsedSeconds());
 }
 
 
@@ -217,7 +217,7 @@ function startTimer() {
 
 function stopTimer() {
   if (!state.timerRunning) {
-    showMessage("Chronomètre", "Le chronomètre n'est pas démarré.");
+    showMessage("ChronomÃ¨tre", "Le chronomÃ¨tre n'est pas dÃ©marrÃ©.");
     return;
   }
   finalizeTimer();
@@ -260,12 +260,12 @@ function showBingoResultPopup() {
   const winners = results.filter(r => r.total === maxScore);
   const winnerText = winners.length === 1
     ? `Gagnant : ${winners[0].label} !`
-    : `Égalité entre : ${winners.map(w => w.label).join(" et ")} !`;
+    : `Ã‰galitÃ© entre : ${winners.map(w => w.label).join(" et ")} !`;
 
   const lines = results.map(({ label, cells, completeLines, bonus }) => {
     return "Joueur " + label + " : " + (cells + bonus) +
       " points\n  (" + cells + " cases + " + completeLines +
-      " ligne(s)/col/diag × " + bonusPerLine + ")";
+      " ligne(s)/col/diag Ã— " + bonusPerLine + ")";
   });
 
   showMessage(winnerText, "Temps : " + formatTime(state.timerElapsed) + "\n\n" + lines.join("\n\n"));
@@ -276,7 +276,7 @@ function validateLinePoints({ silent = false } = {}) {
   const points = Number.parseInt(value, 10);
   if (!value || !Number.isInteger(points)) {
     els.linePoints.value = "3";
-    if (!silent) showMessage("Paramètres", "Le nombre de points doit être un nombre entier.");
+    if (!silent) showMessage("ParamÃ¨tres", "Le nombre de points doit Ãªtre un nombre entier.");
     return false;
   }
   return true;
@@ -354,9 +354,9 @@ function fillGrid() {
   if (entries.length < CELLS_COUNT) {
     showMessage(
       "Erreur",
-      "Pas assez de propositions pour les critères choisis (longueur " +
+      "Pas assez de propositions pour les critÃ¨res choisis (longueur " +
         els.lengthMin.value +
-        " à " +
+        " Ã  " +
         els.lengthMax.value +
         ").\nIl en faut au moins " +
         CELLS_COUNT +
@@ -401,7 +401,7 @@ function drawBingoCell(row, col) {
     const safeCount = Number.isInteger(len) ? Math.max(0, len) : 0;
     starsEl.style.display = "block";
     starsEl.innerHTML = Array.from({ length: safeCount })
-      .map(() => '<span class="star-text" aria-hidden="true">★</span>')
+      .map(() => '<span class="star-text" aria-hidden="true">â˜…</span>')
       .join("");
   } else {
     starsEl.style.display = "none";
@@ -478,7 +478,7 @@ function shuffle(items) {
 
 function toggleBingoCell(row, col) {
   if (!state.timerRunning) {
-    showMessage("Chronomètre", "Le chronomètre doit être démarré");
+    showMessage("ChronomÃ¨tre", "Le chronomÃ¨tre doit Ãªtre dÃ©marrÃ©");
     return;
   }
   if (!state.gridTexts[row][col]) return;
@@ -508,7 +508,7 @@ function updateColorButtons() {
   });
 }
 
-// -------------------- Conquête --------------------
+// -------------------- ConquÃªte --------------------
 
 const CONQ_START_POINTS = [
   [0, 0],
@@ -530,9 +530,9 @@ function makeConqEmptyGrid() {
   stateConq.owner = makeMatrix(GRID_SIZE_CONQ, null);
 }
 
-// Grille Conquête 7x7 intégrée (remplace conquete.txt)
+// Grille ConquÃªte 7x7 intÃ©grÃ©e (remplace conquete.txt)
 function buildConqueteFromCode() {
-  // 1 = case jouable, 0 = case non utilisée (invisible)
+  // 1 = case jouable, 0 = case non utilisÃ©e (invisible)
   stateConq.motif = [
     [1,1,1,1,0,0,1],
     [0,1,1,1,1,1,1],
@@ -559,7 +559,7 @@ function cellConqElement(row, col) {
 }
 
 function conqCellBackground(ownerSet) {
-  // For Conquête, each cell has exactly one owner or null.
+  // For ConquÃªte, each cell has exactly one owner or null.
   if (!ownerSet) return "white";
   return PLAYER_COLORS[ownerSet];
 }
@@ -586,7 +586,7 @@ function drawConqueteCell(row, col) {
   cell.classList.toggle("empty", !owner);
   cell.classList.toggle("filled", Boolean(owner));
 
-  // Texte (rendu Conquête)
+  // Texte (rendu ConquÃªte)
   const text = (stateConq.texts && stateConq.texts[row] && stateConq.texts[row][col]) ? stateConq.texts[row][col] : "";
   cell.querySelector(".cell-text").textContent = text || "";
 
@@ -595,7 +595,7 @@ function drawConqueteCell(row, col) {
   const isCorner = isCornerStart(row, col);
   cell.classList.toggle("conq-start-frame", isCorner);
 
-  // Couleur du cadre (obligation de démarrer sur ces cases)
+  // Couleur du cadre (obligation de dÃ©marrer sur ces cases)
   if (isCorner) {
     const cornerColor = cornerOwnerColor(row, col);
     cell.dataset.conqCorner = cornerColor;
@@ -620,7 +620,7 @@ function buildEmptyConqueteGrid() {
       cell.className = "cell conq-cell";
       cell.dataset.row = String(row);
       cell.dataset.col = String(col);
-      cell.setAttribute("aria-label", "Case conquête");
+      cell.setAttribute("aria-label", "Case conquÃªte");
 
       const textEl = document.createElement("div");
       textEl.className = "cell-text";
@@ -690,7 +690,7 @@ function toggleConqCell(row, col) {
 }
 
 async function conqAutoStartFillBingoLike() {
-  // Règle demandée:
+  // RÃ¨gle demandÃ©e:
   // - "Commencer" met le TEXTE des propositions dans les cellules.
   // - "Commencer" ne DOIT PAS colorer (pas d'owner) : l'utilisateur clique ensuite.
 
@@ -709,10 +709,10 @@ async function conqAutoStartFillBingoLike() {
     }
   }
 
-  // Règles d'égalité de proposition demandées :
+  // RÃ¨gles d'Ã©galitÃ© de proposition demandÃ©es :
   // - A1=A7=G1=G7
   // - A2=B7=F1=G6
-  // (coordonnées en index 0-based: A*=col0, B*=col1, ...)
+  // (coordonnÃ©es en index 0-based: A*=col0, B*=col1, ...)
   const eqGroup1 = [
     [0, 0],
     [0, GRID_SIZE_CONQ - 1],
@@ -728,8 +728,8 @@ async function conqAutoStartFillBingoLike() {
   ];
 
 
-  // Tirages de propositions depuis la liste (aléatoire selon Langue)
-  // On ne filtre pas par longueur car Conquête n'avait pas de critères dans l'UI.
+  // Tirages de propositions depuis la liste (alÃ©atoire selon Langue)
+  // On ne filtre pas par longueur car ConquÃªte n'avait pas de critÃ¨res dans l'UI.
   const selectedForTexts = shuffle(entries).map(e => e[column]);
   let textIdx = 0;
 
@@ -741,9 +741,9 @@ async function conqAutoStartFillBingoLike() {
     return selectedForTexts[textIdx++];
   }
 
-  // Assignation texte: on écrit directement dans le DOM via drawConqueteCell
+  // Assignation texte: on Ã©crit directement dans le DOM via drawConqueteCell
   // => on stocke temporairement dans stateConq.owner? non. On doit avoir un champ texte.
-  // On utilise un tableau dédié.
+  // On utilise un tableau dÃ©diÃ©.
   if (!stateConq.texts) stateConq.texts = makeMatrix(GRID_SIZE_CONQ, "");
 
   // clear texts
@@ -761,7 +761,7 @@ async function conqAutoStartFillBingoLike() {
     if (stateConq.isPlayable[r][c]) stateConq.texts[r][c] = text2;
   }
 
-  // autres cellules jouables: texte aléatoire
+  // autres cellules jouables: texte alÃ©atoire
   for (const [r, c] of playableCells) {
     if (stateConq.texts[r][c]) continue;
     stateConq.texts[r][c] = nextText();
@@ -844,7 +844,7 @@ function showConqueteResultPopup() {
   const winners = results.filter(r => r.total === maxScore);
   const winnerText = winners.length === 1
     ? `Gagnant : ${winners[0].label} !`
-    : `Égalité entre : ${winners.map(w => w.label).join(" et ")} !`;
+    : `Ã‰galitÃ© entre : ${winners.map(w => w.label).join(" et ")} !`;
 
   const lines = results.map(r => `Joueur ${r.label} : ${r.total} cases`);
   showMessage(winnerText, "Temps : " + formatTime(state.timerElapsed) + "\n\n" + lines.join("\n\n"));
@@ -854,7 +854,7 @@ function showConqueteResultPopup() {
 
 function showScreen(screenId) {
   validateTimeLimit({ silent: true });
-  // Only validate bingo settings; conquête uses only timeLimit.
+  // Only validate bingo settings; conquÃªte uses only timeLimit.
 
   els.screens.forEach(screen => screen.classList.toggle("screen-active", screen.id === screenId));
 
@@ -863,7 +863,7 @@ function showScreen(screenId) {
   if (screenId === "route-screen" && typeof resetRouteScreen === "function") resetRouteScreen();
 }
 
-// Mapping des fichiers de données
+// Mapping des fichiers de donnÃ©es
 let fileMapping = {};
 
 async function loadFileMapping() {
@@ -912,7 +912,7 @@ async function bootstrap() {
     els.helpBingoBtn &&
     els.helpBingoDialog &&
     els.helpBingoDialogContent &&
-    els.helpBingoClose
+    els.helpBingoDialogClose
   ) {
     els.helpBingoDialogContent.textContent = "Chargement...";
 
@@ -927,9 +927,9 @@ async function bootstrap() {
       }
     });
 
-    els.helpBingoClose.addEventListener("click", () => {
+    els.helpBingoDialogClose.addEventListener("click", () => {
       try {
-        els.helpBingoDialog.close();
+        els.helpBingoDialogClose.close();
       } catch (_) {}
     });
   }
@@ -959,23 +959,23 @@ async function bootstrap() {
     }
   }
 
-  // Afficher la description du fichier sélectionné
+  // Afficher la description du fichier sÃ©lectionnÃ©
   updateFileDescription();
 
   try {
     const listFileName = getCurrentFileName();
     const data = await Promise.all([
       loadTextFile(listFileName),
-      loadTextFile("Crédits.txt").catch(() => ""),
+      loadTextFile("CrÃ©dits.txt").catch(() => ""),
     ]);
     state.entries = parseListFile(data[0]);
     els.credits.textContent = data[1];
     state.language = els.fileSelect.value;
   } catch (error) {
-    showMessage("Erreur", "Impossible de charger les données du jeu.\n" + error.message);
+    showMessage("Erreur", "Impossible de charger les donnÃ©es du jeu.\n" + error.message);
   }
 
-  // Build Conquête grid motif in code (no file dependency)
+  // Build ConquÃªte grid motif in code (no file dependency)
   try {
     buildConqueteFromCode();
   } catch (e) {
@@ -1027,7 +1027,7 @@ function encodeSeed() {
 
 function decodeSeed(seed) {
   if (seed.length !== 50) {
-    showMessage("Erreur", "La graine doit contenir exactement 50 caractères.");
+    showMessage("Erreur", "La graine doit contenir exactement 50 caractÃ¨res.");
     return false;
   }
   state.gridColors = makeMatrix(GRID_SIZE, null).map(row => row.map(() => new Set()));
@@ -1045,7 +1045,7 @@ function decodeSeed(seed) {
       const idx1 = SEED_ALPHABET.indexOf(char1);
       const idx2 = SEED_ALPHABET.indexOf(char2);
       if (idx1 === -1 || idx2 === -1) {
-        showMessage("Erreur", "Caractère invalide dans la graine : " + (idx1 === -1 ? char1 : char2));
+        showMessage("Erreur", "CaractÃ¨re invalide dans la graine : " + (idx1 === -1 ? char1 : char2));
         return false;
       }
       const index = idx2 * 64 + idx1;
@@ -1093,7 +1093,7 @@ function copySeed() {
   const seed = els.seedDisplay.textContent;
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(seed).then(() => {
-      showMessage("Succès", "Graine copiée dans le presse-papier !");
+      showMessage("SuccÃ¨s", "Graine copiÃ©e dans le presse-papier !");
     }).catch(() => {
       fallbackCopySeed(seed);
     });
@@ -1105,7 +1105,7 @@ function copySeed() {
 function fallbackCopySeed(seed) {
   els.seedDisplay.select();
   document.execCommand("copy");
-  showMessage("Succès", "Graine copiée !");
+  showMessage("SuccÃ¨s", "Graine copiÃ©e !");
 }
 
 function pasteSeed() {
@@ -1149,7 +1149,7 @@ function initEventListeners() {
       els.linePoints.value = "3";
       els.showLength.value = "Non";
       if (els.fileSelect) els.fileSelect.value = "Genshin-FR";
-      showMessage("Paramètres", "Paramètres réinitialisés aux valeurs par défaut.");
+      showMessage("ParamÃ¨tres", "ParamÃ¨tres rÃ©initialisÃ©s aux valeurs par dÃ©faut.");
     });
   }
 
@@ -1162,7 +1162,7 @@ function initEventListeners() {
         const content = await loadTextFile(listFileName);
         state.entries = parseListFile(content);
         state.language = els.fileSelect.value;
-        showMessage("Succès", "Fichier chargé : " + listFileName + "\nNombre de propositions : " + state.entries.length);
+        showMessage("SuccÃ¨s", "Fichier chargÃ© : " + listFileName + "\nNombre de propositions : " + state.entries.length);
       } catch (error) {
         showMessage("Erreur", "Impossible de charger le fichier.\n" + error.message);
       }
@@ -1176,6 +1176,9 @@ function initEventListeners() {
   if (els.cancelSeedBtn) els.cancelSeedBtn.addEventListener("click", () => els.seedDialog.close());
   if (els.copySeedBtn) els.copySeedBtn.addEventListener("click", copySeed);
   if (els.pasteSeedBtn) els.pasteSeedBtn.addEventListener("click", pasteSeed);
+  if (document.getElementById("close-seed")) document.getElementById("close-seed").addEventListener("click",()=>els.seedDialog.close());
+els.colorButtons.forEach(button => button.addEventListener("click",()=>{state.activeColor=button.dataset.color;updateColorButtons();}));
+
 }
 
 // -------------------- Initialisation --------------------
