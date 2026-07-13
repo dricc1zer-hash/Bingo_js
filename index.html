@@ -104,11 +104,13 @@
         </div>
       </div>
       <div id="bingo-grid" class="bingo-grid" aria-label="Grille de bingo"></div>
-      <div class="seed-controls">
-        <button id="import-seed">Importer Graine</button>
-        <button id="export-seed">Exporter Graine</button>
+<div class="seed-controls" style="display:flex;justify-content:space-between;width:100%;margin-top:10px;">
+        <div>
+          <button id="import-seed">Importer Graine</button>
+          <button id="export-seed">Exporter Graine</button>
+        </div>
+        <button class="back-button" data-screen="main-screen">Menu principal</button>
       </div>
-      <button class="back-button" data-screen="main-screen">Menu principal</button>
     </section>
     <section id="settings-screen" class="screen settings-screen" aria-labelledby="settings-title">
 
@@ -121,6 +123,7 @@
         <label><span>Temps limite en Min</span><input id="time-limit" type="number" min="1" step="1" value="30" inputmode="numeric"></label>
         <label><span>Points pour ligne/Col/diag</span><input id="line-points" type="number" min="0" step="1" value="3" inputmode="numeric"></label>
         <label><span>Fichier</span><select id="file-select"><option selected>Genshin-FR</option><option>Genshin-EN</option></select></label>
+        <div id="file-description" style="text-align:right;color:#666;font-size:14px;margin-top:4px;"></div>
 
         <label><span>Afficher Longueur</span><select id="show-length"><option selected>Non</option><option>Oui</option></select></label>
         <button id="reset-settings" type="button">Par défaut</button>
@@ -133,8 +136,8 @@
 
       <div class="toolbar" aria-label="Contrôles de partie">
         <button id="fill-grid-conquete">Commencer</button>
-        <button id="start-timer">Démarrer chrono</button>
-        <button id="stop-timer">Arrêter chrono</button>
+        <button id="start-timer-conquete">Démarrer chrono</button>
+        <button id="stop-timer-conquete">Arrêter chrono</button>
         <div class="player-colors" aria-label="Couleur du joueur actif">
           <button class="color-button" data-color="green" aria-label="Joueur Vert"></button>
           <button class="color-button" data-color="red" aria-label="Joueur Rouge"></button>

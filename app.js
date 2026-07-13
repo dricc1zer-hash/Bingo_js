@@ -53,6 +53,8 @@ const els = {
 
   startTimer: document.querySelector("#start-timer"),
   stopTimer: document.querySelector("#stop-timer"),
+  startTimerConq: document.querySelector("#start-timer-conquete"),
+  stopTimerConq: document.querySelector("#stop-timer-conquete"),
 
   // Settings
   difficulty: document.querySelector("#difficulty"),
@@ -63,6 +65,7 @@ const els = {
   showLength: document.querySelector("#show-length"),
   resetSettings: document.querySelector("#reset-settings"),
   fileSelect: document.querySelector("#file-select"),
+  fileDescription: document.querySelector("#file-description"),
 
   // Seed modal (Bingo only)
   colorButtons: [...document.querySelectorAll(".color-button")],
@@ -925,6 +928,19 @@ async function bootstrap() {
     console.log("file-select populated with keys:", Object.keys(fileMapping));
   }
 
+  // Update file description display
+  function updateFileDescription() {
+    if (els.fileSelect && els.fileDescription) {
+      const info = fileMapping[els.fileSelect.value];
+      els.fileDescription.textContent = (info && info.description) || "";
+    }
+  }
+
+  if (els.fileSelect && els.fileDescription) {
+    els.fileSelect.addEventListener("change", updateFileDescription);
+    updateFileDescription();
+  }
+
   try {
     const listFileName = getCurrentFileName();
     const data = await Promise.all([
@@ -1102,6 +1118,8 @@ function initEventListeners() {
   // Timer
   if (els.startTimer) els.startTimer.addEventListener("click", startTimer);
   if (els.stopTimer) els.stopTimer.addEventListener("click", stopTimer);
+  if (els.startTimerConq) els.startTimerConq.addEventListener("click", startTimer);
+  if (els.stopTimerConq) els.stopTimerConq.addEventListener("click", stopTimer);
 
   // Settings
   if (els.resetSettings) {
