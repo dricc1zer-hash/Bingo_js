@@ -911,18 +911,18 @@ async function bootstrap() {
   if (
     els.helpBingoBtn &&
     els.helpBingoDialog &&
-    els.helpDialogContent &&
+    els.helpBingoDialogContent &&
     els.helpBingoClose
   ) {
-    els.helpDialogContent.textContent = "Chargement...";
+    els.helpBingoDialogContent.textContent = "Chargement...";
 
     els.helpBingoBtn.addEventListener("click", async () => {
       try {
         const txt = await loadTextFile("HELP_bingo.txt").catch(() => loadTextFile("HELP_bingo.txt"));
-        els.helpDialogContent.textContent = txt;
+        els.helpBingoDialogContent.textContent = txt;
         els.helpBingoDialog.showModal();
       } catch (e) {
-        els.helpDialogContent.textContent = "Aide indisponible: " + (e?.message || String(e));
+        els.helpBingoDialogContent.textContent = "Aide indisponible: " + (e?.message || String(e));
         els.helpBingoDialog.showModal();
       }
     });
