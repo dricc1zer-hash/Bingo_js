@@ -1,3 +1,2 @@
-Genshin-FR;Liste_FR.txt
-Genshin-EN;Liste_EN.txt
-Genshin2-FR;liste_Genshin_FR.txt
+Genshin-FR;Liste_FR.txt;Genshin impact bingo pour joueurs vétérans
+Genshin-EN;Liste_EN.txt;Genshin impact bingo for veteran players
