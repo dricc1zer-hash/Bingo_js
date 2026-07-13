@@ -865,23 +865,14 @@ function showScreen(screenId) {
 let fileMapping = {};
 
 async function loadFileMapping() {
-  try {
-    const content = await loadTextFile("Fichiers.txt");
-    fileMapping = {};
-    const lines = content.split(/\r?\n/).filter(line => line.trim() && !line.startsWith("#"));
-    for (const line of lines) {
-      const [displayName, fileName, description] = line.split(";").map(s => s.trim());
-      if (displayName && fileName) {
-        fileMapping[displayName] = { fileName, description };
-      }
+  const content = await loadTextFile("Fichiers.txt");
+  fileMapping = {};
+  const lines = content.split(/\r?\n/).filter(line => line.trim() && !line.startsWith("#"));
+  for (const line of lines) {
+    const [displayName, fileName, description] = line.split(";").map(s => s.trim());
+    if (displayName && fileName) {
+      fileMapping[displayName] = { fileName, description };
     }
-  } catch (error) {
-    console.error("Erreur lors du chargement de Fichiers.txt:", error);
-    // Fallback vers l'ancien comportement
-    fileMapping = {
-      "Genshin-FR": { fileName: "Liste_FR.txt", description: "" },
-      "Genshin-EN": { fileName: "Liste_EN.txt", description: "" }
-    };
   }
 }
 
@@ -1130,6 +1121,14 @@ function initEventListeners() {
     });
   }
 
+  // Color buttons click handler
+  els.colorButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      state.activeColor = button.dataset.color;
+      updateColorButtons();
+    });
+  });
+
   // Seed modal
   if (els.exportSeedBtn) els.exportSeedBtn.addEventListener("click", exportSeed);
   if (els.importSeedBtn) els.importSeedBtn.addEventListener("click", importSeed);
@@ -1137,7 +1136,9 @@ function initEventListeners() {
   if (els.cancelSeedBtn) els.cancelSeedBtn.addEventListener("click", () => els.seedDialog.close());
   if (els.copySeedBtn) els.copySeedBtn.addEventListener("click", copySeed);
   if (els.pasteSeedBtn) els.pasteSeedBtn.addEventListener("click", pasteSeed);
-  if (document.getElementById("close-seed")) document.getElementById("close-seed").addEventListener("click", () => els.seedDialog.close());
+  if (document.getElementById("close-seed")) document.getElementById("close-seed").addEventListener("click", () => {
+    if (els.seedDialog) els.seedDialog.close();
+  });
 }
 
 // -------------------- Initialisation --------------------
