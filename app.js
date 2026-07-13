@@ -916,7 +916,14 @@ async function bootstrap() {
 
   // Charger le mapping des fichiers
   await loadFileMapping();
-  console.log("fileMapping:", "Object.keys(fileMapping)");
+
+  // Populate file-select dropdown dynamically
+  if (els.fileSelect) {
+    els.fileSelect.innerHTML = Object.keys(fileMapping).map(key => 
+      `<option>${key}</option>`
+    ).join("");
+    console.log("file-select populated with keys:", Object.keys(fileMapping));
+  }
 
   try {
     const listFileName = getCurrentFileName();
