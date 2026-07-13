@@ -63,6 +63,7 @@ const els = {
   showLength: document.querySelector("#show-length"),
   resetSettings: document.querySelector("#reset-settings"),
   fileSelect: document.querySelector("#file-select"),
+  fileDescription: document.querySelector("#file-description"),
 
   // Seed modal (Bingo only)
   colorButtons: [...document.querySelectorAll(".color-button")],
@@ -871,9 +872,12 @@ async function loadFileMapping() {
     fileMapping = {};
     const lines = content.split(/\r?\n/).filter(line => line.trim() && !line.startsWith("#"));
     for (const line of lines) {
-      const [displayName, fileName] = line.split(";").map(s => s.trim());
+      const parts = line.split(";").map(s => s.trim());
+      const displayName = parts[0];
+      const fileName = parts[1];
+      const description = parts[2] || "";
       if (displayName && fileName) {
-        fileMapping[displayName] = fileName;
+        fileMapping[displayName] = { fileName, description };
       }
     }
   } catch (error) {
@@ -888,7 +892,17 @@ async function loadFileMapping() {
 
 function getCurrentFileName() {
   const selectedDisplay = els.fileSelect.value;
-  return fileMapping[selectedDisplay] || "Liste_FR.txt";
+  const info = fileMapping[selectedDisplay];
+  return info ? (info.fileName || "Liste_FR.txt") : "Liste_FR.txt";
+}
+
+function updateFileDescription() {
+  const selectedDisplay = els.fileSelect.value;
+  const info = fileMapping[selectedDisplay];
+  if (els.fileDescription) {
+    els.fileDescription.textContent = info ? (info.description || "") : "";
+    els.fileDescription.style.display = info && info.description ? "block" : "none";
+  }
 }
 
 async function bootstrap() {
@@ -939,12 +953,14 @@ async function bootstrap() {
         if (name === currentValue) opt.selected = true;
         els.fileSelect.appendChild(opt);
       });
-      // Si la valeur actuelle n'existe pas, sélectionner la première
       if (!displayNames.includes(currentValue)) {
         els.fileSelect.value = displayNames[0];
       }
     }
   }
+
+  // Afficher la description du fichier sélectionné
+  updateFileDescription();
 
   try {
     const listFileName = getCurrentFileName();
@@ -965,7 +981,6 @@ async function bootstrap() {
   } catch (e) {
     console.error(e);
   }
-
 
   buildEmptyGrid();
   updateColorButtons();
@@ -1141,6 +1156,7 @@ function initEventListeners() {
   // Changement de fichier
   if (els.fileSelect) {
     els.fileSelect.addEventListener("change", async () => {
+      updateFileDescription();
       try {
         const listFileName = getCurrentFileName();
         const content = await loadTextFile(listFileName);
