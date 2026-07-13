@@ -1,4 +1,4 @@
-Genshin-FR;Liste_FR.txt;Genshin impact bingo pour joueurs vétérans
-Genshin-EN;Liste_EN.txt;Genshin impact bingo for veteran players
-Réunions-FR;Liste_Reunion_FR.txt;Une réunion ennuyeuse au boulot? testez notre Bingo
-Speedrun_Marathon;Liste_Marathon_Speedrun.txt;A faire pendant les marathons de speedrun!
+Genshin-FR;Liste_FR.txt;Propositions en français pour Genshin Impact Bingo
+Genshin-EN;Liste_EN.txt;English propositions for Genshin Impact Bingo
+Reunions-FR;Liste_Reunion_FR.txt;Reunions ennuyeuses au boulot? Testez notre Bingo
+Speedrun-Marathon;Liste_Marathon_Speedrun.txt;A faire pendant les marathons de speedrun
