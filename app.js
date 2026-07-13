@@ -112,8 +112,9 @@ function parseListFile(content) {
   const parsed = lines.map(line => {
     let parts;
     if (line.includes("\t")) parts = line.split("\t");
+    else if (line.includes("|")) parts = line.split("|");
     else if (line.includes(";")) parts = line.split(";");
-    else parts = line.split(/\s{2,}/);
+    else parts = line.split("\t");
     return parts.map(p => p.trim());
   }).filter(parts => parts.length >= 5);
   return parsed.map(parts => ({
@@ -922,6 +923,29 @@ async function bootstrap() {
   // Charger le mapping des fichiers
   await loadFileMapping();
 
+  // Peupler le select avec les options du Fichiers.txt
+  if (els.fileSelect) {
+    const currentValue = els.fileSelect.value;
+    els.fileSelect.innerHTML = "";
+    const displayNames = Object.keys(fileMapping);
+    if (displayNames.length === 0) {
+      // Fallback si mapping vide
+      els.fileSelect.innerHTML = '<option selected>Genshin-FR</option><option>Genshin-EN</option>';
+    } else {
+      displayNames.forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        if (name === currentValue) opt.selected = true;
+        els.fileSelect.appendChild(opt);
+      });
+      // Si la valeur actuelle n'existe pas, sélectionner la première
+      if (!displayNames.includes(currentValue)) {
+        els.fileSelect.value = displayNames[0];
+      }
+    }
+  }
+
   try {
     const listFileName = getCurrentFileName();
     const data = await Promise.all([
@@ -1119,10 +1143,10 @@ function initEventListeners() {
     els.fileSelect.addEventListener("change", async () => {
       try {
         const listFileName = getCurrentFileName();
-        const data = await loadTextFile(listFileName);
-        state.entries = parseListFile(data[0]);
+        const content = await loadTextFile(listFileName);
+        state.entries = parseListFile(content);
         state.language = els.fileSelect.value;
-        showMessage("Succès", "Fichier chargé : " + listFileName);
+        showMessage("Succès", "Fichier chargé : " + listFileName + "\nNombre de propositions : " + state.entries.length);
       } catch (error) {
         showMessage("Erreur", "Impossible de charger le fichier.\n" + error.message);
       }
