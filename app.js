@@ -1176,8 +1176,21 @@ function initEventListeners() {
   if (els.cancelSeedBtn) els.cancelSeedBtn.addEventListener("click", () => els.seedDialog.close());
   if (els.copySeedBtn) els.copySeedBtn.addEventListener("click", copySeed);
   if (els.pasteSeedBtn) els.pasteSeedBtn.addEventListener("click", pasteSeed);
-  if (document.getElementById("close-seed")) document.getElementById("close-seed").addEventListener("click",()=>els.seedDialog.close());
-els.colorButtons.forEach(button => button.addEventListener("click",()=>{state.activeColor=button.dataset.color;updateColorButtons();}));
+
+  // Close button for seed dialog
+  if (document.getElementById("close-seed")) {
+    document.getElementById("close-seed").addEventListener("click", () => {
+      if (els.seedDialog) els.seedDialog.close();
+    });
+  }
+
+  // Color buttons click handler
+  els.colorButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      state.activeColor = button.dataset.color;
+      updateColorButtons();
+    });
+  });
 
 }
 
