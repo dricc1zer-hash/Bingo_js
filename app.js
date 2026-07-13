@@ -868,12 +868,15 @@ async function loadFileMapping() {
   const content = await loadTextFile("Fichiers.txt");
   fileMapping = {};
   const lines = content.split(/\r?\n/).filter(line => line.trim() && !line.startsWith("#"));
+  console.log("Fichiers.txt loaded, lines:", lines.length);
   for (const line of lines) {
     const [displayName, fileName, description] = line.split(";").map(s => s.trim());
+    console.log("Mapping entry:", displayName, "->", fileName);
     if (displayName && fileName) {
       fileMapping[displayName] = { fileName, description };
     }
   }
+  console.log("fileMapping:", Object.keys(fileMapping));
 }
 
 function getCurrentFileName() {
@@ -913,6 +916,7 @@ async function bootstrap() {
 
   // Charger le mapping des fichiers
   await loadFileMapping();
+  console.log("fileMapping:", "Object.keys(fileMapping)");
 
   try {
     const listFileName = getCurrentFileName();
