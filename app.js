@@ -861,7 +861,6 @@ function showScreen(screenId) {
 
   if (screenId === "bingo-screen") resetBingoScreen();
   if (screenId === "conquete-screen") resetConqueteScreen();
-  if (screenId === "route-screen" && typeof resetRouteScreen === "function") resetRouteScreen();
 }
 
 // Mapping des fichiers de données
@@ -973,8 +972,6 @@ async function bootstrap() {
   if (els.conqGrid && stateConq.isPlayable) {
     buildEmptyConqueteGrid();
   }
-
-  if (typeof initRouteModule === "function") initRouteModule();
 }
 
 // -------------------- Seed modal (Bingo only) --------------------
